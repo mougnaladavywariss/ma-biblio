@@ -2,40 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../models/livre.dart';
 import '../data/livres_data.dart';
+import '../widgets/livre_card.dart'; // Import de la carte
+import 'detail_screen.dart'; // Import de l'écran de détail
 
 class CatalogueScreen extends StatelessWidget {
   const CatalogueScreen({super.key});
-
-  Widget _livreTile(Livre livre) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: livre.couleur,
-        child: Text(
-          livre.titre.isNotEmpty ? livre.titre[0].toUpperCase() : '',
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      title: Text(
-        livre.titre,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text('${livre.auteur} – ${livre.annee}'),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            livre.note.toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          const SizedBox(width: 4),
-          const Icon(Icons.star, color: Colors.amber, size: 20),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,22 +31,32 @@ class CatalogueScreen extends StatelessWidget {
               itemCount: nouveautes.length,
               itemBuilder: (context, index) {
                 final livre = nouveautes[index];
-                return Container(
-                  width: 110,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: livre.couleur,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        livre.titre,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(livre: livre),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 110,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: livre.couleur,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          livre.titre,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -85,7 +66,6 @@ class CatalogueScreen extends StatelessWidget {
             ),
           ),
           const Divider(height: 24),
-          // Titre section Tout le catalogue
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: Text(
@@ -94,11 +74,21 @@ class CatalogueScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.separated(
+            child: ListView.builder(
               itemCount: livres.length,
-              separatorBuilder: (context, index) => const Divider(indent: 72),
               itemBuilder: (context, index) {
-                return _livreTile(livres[index]);
+                final livre = livres[index];
+                return LivreCard(
+                  livre: livre,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailScreen(livre: livre),
+                      ),
+                    );
+                  },
+                );
               },
             ),
           ),
