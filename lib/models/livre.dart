@@ -50,7 +50,7 @@ class Livre {
       'annee': annee,
       'note': note,
       'couleur':
-          '#${couleur.value.toRadixString(16).substring(2).toUpperCase()}',
+          '#${couleur.toARGB32().toRadixString(16).substring(2).toUpperCase()}',
       'nouveaute': nouveaute,
       'lu': lu,
       'favori': favori,

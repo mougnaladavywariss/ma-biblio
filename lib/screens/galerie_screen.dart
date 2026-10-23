@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../models/livre.dart';
-import '../data/livres_data.dart';
 import '../widgets/livre_grid_item.dart';
 import '../widgets/livre_card.dart';
 import 'detail_screen.dart';
 
 class GalerieScreen extends StatefulWidget {
-  const GalerieScreen({super.key});
+  final List<Livre> livres;
+
+  const GalerieScreen({super.key, required this.livres});
 
   @override
   State<GalerieScreen> createState() => _GalerieScreenState();
@@ -30,7 +31,7 @@ class _GalerieScreenState extends State<GalerieScreen> {
             tooltip: 'Trier par note',
             onPressed: () {
               setState(() {
-                livres.sort((a, b) => b.note.compareTo(a.note));
+                widget.livres.sort((a, b) => b.note.compareTo(a.note));
               });
             },
           ),
@@ -47,7 +48,7 @@ class _GalerieScreenState extends State<GalerieScreen> {
       ),
       body: _isGridView
           ? GridView.builder(
-              itemCount: livres.length,
+              itemCount: widget.livres.length,
               padding: const EdgeInsets.all(12),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
@@ -56,7 +57,7 @@ class _GalerieScreenState extends State<GalerieScreen> {
                 crossAxisSpacing: 12,
               ),
               itemBuilder: (context, index) {
-                final livre = livres[index];
+                final livre = widget.livres[index];
                 return LivreGridItem(
                   livre: livre,
                   onTap: () {
@@ -65,15 +66,15 @@ class _GalerieScreenState extends State<GalerieScreen> {
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(livre: livre),
                       ),
-                    ).then((_) => setState(() {})); // Rafraîchir au retour
+                    ).then((_) => setState(() {}));
                   },
                 );
               },
             )
           : ListView.builder(
-              itemCount: livres.length,
+              itemCount: widget.livres.length,
               itemBuilder: (context, index) {
-                final livre = livres[index];
+                final livre = widget.livres[index];
                 return LivreCard(
                   livre: livre,
                   onTap: () {

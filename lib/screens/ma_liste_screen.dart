@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../models/livre.dart';
-import '../data/livres_data.dart';
 
 class MaListeScreen extends StatefulWidget {
-  const MaListeScreen({super.key});
+  final List<Livre> livres;
+
+  const MaListeScreen({super.key, required this.livres});
 
   @override
   State<MaListeScreen> createState() => _MaListeScreenState();
@@ -44,7 +45,7 @@ class _MaListeScreenState extends State<MaListeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final livresFiltres = livres.where((livre) {
+    final livresFiltres = widget.livres.where((livre) {
       bool genreCoche = _genres[livre.genre] ?? false;
       bool respecteNouveaute = !_nouveautesSeulement || livre.nouveaute;
       return genreCoche && respecteNouveaute;
@@ -67,7 +68,6 @@ class _MaListeScreenState extends State<MaListeScreen> {
             },
           ),
           const Divider(),
-
           CheckboxListTile(
             title: const Text('Tous les genres'),
             tristate: true,
@@ -80,9 +80,10 @@ class _MaListeScreenState extends State<MaListeScreen> {
             },
           ),
           const Divider(),
-
           ..._genres.keys.map((genre) {
-            int nombreLivres = livres.where((l) => l.genre == genre).length;
+            int nombreLivres = widget.livres
+                .where((l) => l.genre == genre)
+                .length;
 
             return CheckboxListTile(
               title: Text(genre),
@@ -98,7 +99,6 @@ class _MaListeScreenState extends State<MaListeScreen> {
               },
             );
           }).toList(),
-
           const Divider(thickness: 2),
           const Padding(
             padding: EdgeInsets.all(8.0),
@@ -107,7 +107,6 @@ class _MaListeScreenState extends State<MaListeScreen> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

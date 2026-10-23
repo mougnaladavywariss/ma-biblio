@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'models/livre.dart';
 import 'services/livre_service.dart';
 import 'screens/parametres_screen.dart';
+import 'screens/catalogue_screen.dart';
+import 'screens/galerie_screen.dart';
+import 'screens/ma_liste_screen.dart';
 
 void main() {
   runApp(const MaBiblioApp());
@@ -44,7 +47,6 @@ class HomeLoader extends StatelessWidget {
             ),
           );
         } else {
-          // Données chargées avec succès
           final livres = snapshot.data!;
           return HomePage(livres: livres);
         }
@@ -63,58 +65,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    final troisPremiersLivres = widget.livres.take(3).toList();
+    final List<Widget> ecrans = [
+      CatalogueScreen(livres: widget.livres),
+      GalerieScreen(livres: widget.livres),
+      MaListeScreen(livres: widget.livres),
+    ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MaBiblio - Accueil'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Paramètres',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ParametresScreen(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Mes 3 premiers livres :',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-
-          ...troisPremiersLivres.map(
-            (livre) => ListTile(
-              leading: CircleAvatar(
-                backgroundColor: livre.couleur,
-                child: Text(
-                  livre.titre.isNotEmpty ? livre.titre[0].toUpperCase() : '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              title: Text(livre.titre),
-              subtitle: Text(livre.auteur),
-            ),
+      body: ecrans[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          LivreService.sauvegarderLivres(widget.livres);
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Catalogue'),
+          BottomNavigationBarItem(icon: Icon(Icons.grid_on), label: 'Galerie'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.checklist),
+            label: 'Ma liste',
           ),
         ],
       ),

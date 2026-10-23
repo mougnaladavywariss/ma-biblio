@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../models/livre.dart';
-import '../data/livres_data.dart';
 import '../widgets/livre_card.dart';
 import 'detail_screen.dart';
 
 class CatalogueScreen extends StatelessWidget {
-  const CatalogueScreen({super.key});
+  final List<Livre> livres;
+
+  const CatalogueScreen({super.key, required this.livres});
 
   @override
   Widget build(BuildContext context) {
