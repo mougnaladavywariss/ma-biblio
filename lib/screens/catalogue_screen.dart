@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/livre.dart';
 import '../data/livres_data.dart';
-import '../widgets/livre_card.dart'; // Import de la carte
-import 'detail_screen.dart'; // Import de l'écran de détail
+import '../widgets/livre_card.dart';
+import 'detail_screen.dart';
 
 class CatalogueScreen extends StatelessWidget {
   const CatalogueScreen({super.key});
